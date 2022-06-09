@@ -8,8 +8,12 @@ The code given to driver should contain the information about the mode selected 
 Firstly, directly inform the motivation.
 Secondly, send the coordinate to the driver.
 
-DRIVER
+## DRIVER
 Sensor could send the information of Angle and Position.
+Do not understand what is H-bridge.
+
+## Sensor
+Do I need to understand the code given from the sensor material?
 
 CLK
 We should use the same frquency of the sensor( dirver part given );
@@ -34,3 +38,7 @@ Everytime open the Ardunio, we could open the sketch to preventing writing the c
 
 
 The ESP32 board can act as Wi-Fi Station, Access Point or both.
+
+## Protocol 
+At first, I will try to understand the MQTT.
+The port typically used for MQTT is 1883, and for websockets port 9001.
