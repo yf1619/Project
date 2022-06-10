@@ -10,11 +10,14 @@ const char* mqttServer = "test.mosquitto.org";//This is the address of the serve
  
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
- 
+
+void connectMQTTServer();
+void connectWifi();
+
 void setup() {
   Serial.begin(115200);
  
-  //设置ESP8266工作模式为无线终端模式
+  //设置ESP32工作模式为无线终端模式
   WiFi.mode(WIFI_STA);
   
   // 连接WiFi
