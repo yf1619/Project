@@ -599,6 +599,142 @@ void loop()
       }
     }
   }
+  
+  if (mode == 'M'){//for mapping
+    int headroom = 100; // prevent hitting the wall
+    int increment = 0; //in declearation
+
+    float length_r = 200, width_r = 200; //size of the rover
+    float length_c = 4000, width_c = 3000; //size of the court
+
+    int period =  (width_c-200) / (2*width_r);
+    bool go_straight_1 = false, go_straight_2 = false, go_straight_3 = false, go_straight_4 = true;
+    bool turn_90_1 = false, turn_90_2 = false, turn_90_3 = false, turn_90_4 = false;
+
+    for(int i = 0; i <= period; i++){
+
+      if(!go_straight_1 && go_straight_4){
+        go_straight_1 = distance_control(200+increment, 4000-headroom-length_r);
+
+      }
+
+      else if(go_straight_1 && !turn_90_1){
+        if(i = period){
+          break;
+        }
+        turn_90_1 = angel_control(90, dy_mm, dx_mm, &current_angle);
+      }
+
+      else if(turn_90_1 && !go_straight_2){
+        increment = increment + 200;
+        go_straight_2 = distance_control(200+increment, 4000-headroom-length_r);
+      }
+    
+      else if(go_straight_2 && !turn_90_2){
+        turn_90_2 = angel_control(180, dy_mm, dx_mm, &current_angle);
+      }
+
+      else if(turn_90_2 && !go_straight_3){
+        go_straight_3 = distance_control(200+increment, headroom+length_r);
+      }
+
+      else if(go_straight_3 && !turn_90_3){
+        turn_90_3 = angel_control(90, dy_mm, dx_mm, &current_angle);
+      }
+
+      else if(turn_90_3 && !go_straight_4){
+        increment = increment + 200;
+        go_straight_4 = distance_control(200+increment, headroom+length_r);
+      }
+
+      else{
+        turn_90_4 = angel_control(0, dy_mm, dx_mm, &current_angle);
+        go_straight_1 = go_straight_2 = go_straight_3 = go_straight_4 = false;
+        turn_90_1 = turn_90_2 = turn_90_3 = false;
+      }
+    }
+
+  }
+
+  if (mode == 'D'){
+    /*discussion of the position:
+    1. normal 
+    */
+    float d_o;// distance from the rover to the obstacle detected, given from the Vision
+    float angle_o;//angle between the y-axis and the line connected the rover and the obstacle
+
+    float del_x = sin(angle_o)*d_o;
+    float del_y = cos(angle_o)*d_o;
+
+    if((del_x < width_r) && (d_o < 20)){
+      //move from (x,y) to (x+del_x+del_y, y+del_y)
+      destination_x = destination_x_prev+del_x+del_y;
+      destination_y = destination_y_prev+del_y;
+
+      reachDestination = (destination_x != destination_x_prev || destination_y != destination_y_prev) ? false : reachDestination;
+      float change_x = del_x + del_y;
+      float change_y = del_y;
+      bool turn_done_1, move_done_1, turn_done_2, move_done_2, check_done;
+
+      // rotate first
+      if (!turn_done_1 && !reachDestination){
+        if (change_x > 0 && change_y > 0)
+        {
+          turn_done_1 = angel_control(convertTodegree(atan(change_x / change_y)), dy_mm, dx_mm, &current_angle); // 1st quadrant
+        }
+        else if (change_x < 0 && change_y > 0)
+        {
+          turn_done_1 = angel_control(convertTodegree(atan(-change_x / change_y)), dy_mm, dx_mm, &current_angle); // 2nd quadrant
+        }
+        else if (change_x < 0 && change_y < 0)
+        {
+          turn_done_1 = angel_control(convertTodegree(atan(-change_y / change_x)) - 90, dy_mm, dx_mm, &current_angle); // 3rd quadrant
+        }
+        else if (change_x > 0 && change_y < 0)
+        {
+          turn_done_1 = angel_control(convertTodegree(atan(-change_y / change_x)) + 90, dy_mm, dx_mm, &current_angle); // 4th quadrant
+        }
+      }
+
+      // move forward/backward
+      if (turn_done_1 && !move_done_1)
+      {
+        move_done_1 = distance_control(destination_x, destination_y);
+      }
+        
+      if (move_done_1 && !turn_done_2){
+      //move from (x+del_x+del_y, y+del_y) to (x, y+2*del_y)
+        destination_x = destination_x_prev+del_x+del_y;
+        destination_y = destination_y_prev+del_y;
+
+        change_x = -del_x-del_y;
+        change_y = del_y;
+
+        if (change_x > 0 && change_y > 0)
+        {
+          turn_done_2 = angel_control(convertTodegree(atan(change_x / change_y)), dy_mm, dx_mm, &current_angle); // 1st quadrant
+        }
+        else if (change_x < 0 && change_y > 0)
+        {
+          turn_done_2 = angel_control(convertTodegree(atan(-change_x / change_y)), dy_mm, dx_mm, &current_angle); // 2nd quadrant
+        }
+        else if (change_x < 0 && change_y < 0)
+        {
+          turn_done_2 = angel_control(convertTodegree(atan(-change_y / change_x)) - 90, dy_mm, dx_mm, &current_angle); // 3rd quadrant
+        }
+        else if (change_x > 0 && change_y < 0)
+        {
+          turn_done_2 = angel_control(convertTodegree(atan(-change_y / change_x)) + 90, dy_mm, dx_mm, &current_angle); // 4th quadrant
+        }
+
+      }   
+          
+      if (turn_done_2 && !reachDestination){
+          move_done_2 = distance_control(destination_x, destination_y);
+          check_done = reachDestination;
+      }  
+    }
+  }
 
   currT = micros();
   float sendback = 100; 
