@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <Robojax_L298N_DC_motor.h>
 #include "SPI.h"
 
@@ -332,7 +331,7 @@ bool distance_control(int desired_x, int desired_y)
   return false;
 }
 
-bool angel_control(float desired_angle, float dy, float dx, float *current_an)//Only vary angle not coordinate,wether succuess or fail
+bool angel_control(float desired_angle, float dy, float dx, float *current_an)
 {
   float error_angle = desired_angle - current_angle;
   float control_angle = calculatePID(error_angle);
@@ -514,7 +513,7 @@ void loop()
   /// Modes for command from Vision////
   if (mode == 'V')
   {
-    if (motion == 'F')//After entering the forward, the  Rover keep moving 
+    if (motion == 'F')
     {
       robot.rotate(motor1, 60, CW);
       robot.rotate(motor2, 60, CW);
@@ -534,7 +533,7 @@ void loop()
       robot.rotate(motor1, 60, CCW);
       robot.rotate(motor2, 60, CW);
     }
-    else if (motion == 's')//One more button
+    else if (motion == 's')
     {
       robot.brake(1);
       robot.brake(2);
@@ -552,7 +551,7 @@ void loop()
   current_angle = (current_angle > 180) ? (current_angle - 180) : current_angle;
   current_angle = (current_angle < -180) ? (current_angle + 180) : current_angle;
 
-  if (mode == 'C')//automatic
+  if (mode == 'C')
   {
     reachDestination = (destination_x != destination_x_prev || destination_y != destination_y_prev) ? false : reachDestination;
     float change_x = destination_x - current_x;
