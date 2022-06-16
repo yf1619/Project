@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <Robojax_L298N_DC_motor.h>
 #include "SPI.h"
 
@@ -118,6 +119,13 @@ float control_done = 0;
 long lastTrigger = 0;
 boolean startTimer = false;
 const int motionSensor = 18; // in adns3080
+
+// Values for mapping
+int headroom = 100; // prevent hitting the wall
+int increment = 0; //in declearation
+float length_r = 200, width_r = 200; //size of the rover
+float length_c = 4000, width_c = 3000; //size of the court
+int period =  (width_c-200) / (2*width_r);
 
 ////FUNCTIONS////
 void IRAM_ATTR detectsCLK()
@@ -487,7 +495,7 @@ void loop()
   Serial.println(')');
 
   // Serial.println(md.max_pix);// maximum = 63
-  delay(100);
+  delay(100);//1 s later
 
   distance_x = md.dx; // convTwosComp(md.dx);
   distance_y = md.dy; // convTwosComp(md.dy);
@@ -508,7 +516,7 @@ void loop()
   Serial.println("Distance_y = " + String(total_y));
   Serial.print('\n');
 
-  delay(250);
+  delay(250);//delay 2.5 s
 
   /// Modes for command from Vision////
   if (mode == 'V')
@@ -600,13 +608,7 @@ void loop()
   }
   
   if (mode == 'M'){//for mapping
-    int headroom = 100; // prevent hitting the wall
-    int increment = 0; //in declearation
-
-    float length_r = 200, width_r = 200; //size of the rover
-    float length_c = 4000, width_c = 3000; //size of the court
-
-    int period =  (width_c-200) / (2*width_r);
+    
     bool go_straight_1 = false, go_straight_2 = false, go_straight_3 = false, go_straight_4 = true;
     bool turn_90_1 = false, turn_90_2 = false, turn_90_3 = false, turn_90_4 = false;
 
