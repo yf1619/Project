@@ -1,1 +1,1 @@
-This code try to get the string directly from the datastream in change the code of the mode.
+Right now, I am able to get all the information from the webpage.

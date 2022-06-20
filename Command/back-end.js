@@ -21,39 +21,50 @@ con.connect(function(err) {
     console.log("Connected to Database!");
 }); 
 
-/*
+
 var radar = "CREATE TABLE radar (x_pos INT, y_pos INT)";
 con.query(radar, function (err, result) {
     if (err) throw err;
     console.log("radar table created!");
 });
-*/
 
-con.end((err) => {
+
+/*con.end((err) => {
     // The connection is terminated gracefully
     // Ensures all remaining queries are executed
     // Then sends a quit packet to the MySQL server.
-});  
+}); */ 
     
 // Client's browser performs GET request to ask server to display HTML web page
 server.get('/', function(req, res) {
-    res.sendFile('/Users/Owner/Documents/GitHub/2022Project_Rover/Command/index.html');
+    res.sendFile('/mnt/d/Control_Github/Project/Command/index.html');
+    //Change due to yiwei laptop
 });
 
 // index.html requires styles.css so you have to add a GET request in node.js
 server.get('/styles.css', function(req, res) {
-    res.sendFile('/Users/Owner/Documents/GitHub/2022Project_Rover/Command/styles.css');
+    res.sendFile('/mnt/d/Control_Github/Project/Command/styles.css');
+    //Change due to yiwei laptop
 });
 
 // when a user clicks a button on the web app, data is sent to the server using a POST request
 server.post("/datastream", function (req, res) {
+    
     res.send(req.body.data);
-    //console.log(req.body.data);
+    console.log(req.body.data);
 });
 
 server.get("/datastream", function (req, res) {
-    res.send(req.body.data);
+    
     console.log(req.body.data);
+    //Below is the script used to add data in the sql
+    con.query("SELECT * FROM TABLE radar;", function (err, result) {
+        if (err) throw err;
+        console.log("stssttttstsgs");//This function is used to debug the function
+        console.log(result);
+        res.send(result);//Return the result object to the client
+    });
+    
 });
 
 // testing 
