@@ -1,0 +1,1 @@
+This code try to get the string directly from the datastream in change the code of the mode.

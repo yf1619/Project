@@ -2,11 +2,14 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Arduino.h>
+
 const char* ssid = "YIWEI_Laptop";
 const char* password = "1234567890";
 
 //Your Domain name with URL path or IP address with path
-String serverName = "http://146.169.174.193:8000";
+//For server name , could we change it into another node?
+
+String serverName = "http://192.168.1.199:8000/datastream";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
@@ -29,7 +32,7 @@ void setup() {
   Serial.print("Connected to WiFi network with IP Address: ");
   Serial.println(WiFi.localIP());
  
-  Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
+  //Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
 }
 
 void loop() {
@@ -38,9 +41,9 @@ void loop() {
     //Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
       HTTPClient http;
-
-      String serverPath = serverName + "?Mode=W";
       
+      //String serverPath = serverName + "?Mode=W";
+      String serverPath = serverName;
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());
       
