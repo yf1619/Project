@@ -9,7 +9,7 @@ const char* password = "1234567890";
 //Your Domain name with URL path or IP address with path
 //For server name , could we change it into another node?
 
-String serverName = "http://192.168.1.199:8000/datastream";
+String serverName = "http://192.168.1.199:8000";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
@@ -37,7 +37,7 @@ void setup() {
 
 void loop() {
   //Send an HTTP POST request every 10 minutes
-  if ((millis() - lastTime) > timerDelay) {
+  //if ((millis() - lastTime) > timerDelay) {
     //Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
       HTTPClient http;
@@ -67,5 +67,5 @@ void loop() {
       Serial.println("WiFi Disconnected");
     }
     lastTime = millis();
-  }
+  //}
 }
