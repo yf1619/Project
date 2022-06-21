@@ -10,7 +10,6 @@ const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'toor',
-    database: 'rover'
 });
 
 con.connect(function(err) {
@@ -22,11 +21,11 @@ con.connect(function(err) {
 }); 
 
 
-var radar = "CREATE TABLE radar (x_pos INT, y_pos INT)";
-con.query(radar, function (err, result) {
-    if (err) throw err;
-    console.log("radar table created!");
-});
+// var database = "CREATE DATABASE rover";
+// con.query(database, function (err, result) {
+//     if (err) throw err;
+//     console.log("database created!");
+// });
 
 
 /*con.end((err) => {
