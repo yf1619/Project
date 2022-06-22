@@ -9,7 +9,7 @@ const char* password = "1234567890";
 //Your Domain name with URL path or IP address with path
 //For server name , could we change it into another node?
 //
-String serverName = "http://192.168.137.1:8000";
+String serverName = "http://192.168.137.1:8000/datastream";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
@@ -46,6 +46,7 @@ void loop() {
       HTTPClient http;
       
       //String serverPath = serverName + "?Mode=W";
+      //How can I get the data in the way like https://randomnerdtutorials.com/esp32-http-get-post-arduino/
       String serverPath = serverName;
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());

@@ -5,11 +5,13 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 var mysql = require('mysql');
 var http = require('http');
+//Below is used to create the table and database
 
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'toor',
+    database: 'rover'
 });
 
 con.connect(function(err) {
@@ -18,6 +20,11 @@ con.connect(function(err) {
         throw err;
     }
     console.log("Connected to Database!");
+    var sql = "CREATE TABLE Movement (name VARCHAR(255), address VARCHAR(255))";
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("Table created");
+    });
 }); 
 
 
