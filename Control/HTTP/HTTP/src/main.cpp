@@ -9,14 +9,14 @@ const char* password = "1234567890";
 //Your Domain name with URL path or IP address with path
 //For server name , could we change it into another node?
 //
-String serverName = "http://192.168.137.1:8000/datastream";
+String serverName = "http://146.169.169.105:8000/datastream";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
 //Below is the timer
 unsigned long lastTime = 0;
 // Timer set to 10 minutes (600000)
-//unsigned long timerDelay = 600000;
+//unsigned long timerDelay = 600000;  
 // Set timer to 5 seconds (5000)
 //Below is the timer
 //Below is the timer 

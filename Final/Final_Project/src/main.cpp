@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include <Robojax_L298N_DC_motor.h>
 #include "SPI.h"
-
+#include <WiFi.h>
+#include <HTTPClient.h>
 // motor 1 right wheel
 #define CHA 0
 #define ENA 22 // this pin must be PWM enabled pin if Arduino board is used
@@ -64,6 +65,25 @@ Robojax_L298N_DC_motor robot(IN1, IN2, ENA, CHA, IN3, IN4, ENB, CHB);
 #define ADNS3080_SROM_LOAD 0x60
 
 #define ADNS3080_PRODUCT_ID_VAL 0x17
+//Variables for WIFI Connection
+const char* ssid = "YIWEI_Laptop";
+const char* password = "1234567890";
+//Your Domain name with URL path or IP address with path
+String serverName = "http://192.168.137.1:8000/datastream";
+
+// the following variables are unsigned longs because the time, measured in
+// milliseconds, will quickly become a bigger number than can be stored in an int.
+//Below is the timer
+unsigned long lastTime = 0;
+// Timer set to 10 minutes (600000)
+//unsigned long timerDelay = 600000;  
+// Set timer to 5 seconds (5000)
+//Below is the timer
+//Below is the timer 
+unsigned long timerDelay = 5000;
+//Above is wifi connection part
+
+
 
 // Values for optical flow sensor
 int total_x = 0;
@@ -406,7 +426,19 @@ float convertTodegree(float angle_radians)
 void setup()
 {
   //Serial.begin(9600);
+  //Below is Wifi Connection Set-up
+   Serial.begin(115200); 
 
+  WiFi.begin(ssid, password);
+  Serial.println("Connecting");
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to WiFi network with IP Address: ");
+  Serial.println(WiFi.localIP());
+  //Above is Wifi-Connection Set-up
   pinMode(PIN_SS, OUTPUT);
   pinMode(PIN_MISO, INPUT);
   pinMode(PIN_MOSI, OUTPUT);
@@ -474,7 +506,34 @@ void loop()
   delay(250);
 
 #else
-
+if(WiFi.status()== WL_CONNECTED){
+      HTTPClient http;
+      
+      //String serverPath = serverName + "?Mode=W";
+      //How can I get the data in the way like https://randomnerdtutorials.com/esp32-http-get-post-arduino/
+      String serverPath = serverName;
+      // Your Domain name with URL path or IP address with path
+      http.begin(serverPath.c_str());
+      Serial.println(serverPath.c_str());//Test what is input
+      // Send HTTP GET request
+      int httpResponseCode = http.GET();
+      
+      if (httpResponseCode>0) {
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+      else {
+        Serial.print("Error code: ");
+        Serial.println(httpResponseCode);
+      }
+      // Free resources
+      http.end();
+    }
+    else {
+      Serial.println("WiFi Disconnected");
+    }
   // if enabled this section produces a bar graph of the surface quality that can be used to focus the camera
   // also drawn is the average pixel value 0-63 and the shutter speed and the motion dx,dy.
   // move straight for 3 sec
