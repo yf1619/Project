@@ -2,8 +2,8 @@
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
  //https://techtutorialsx.com/2018/10/12/esp32-http-web-server-handling-body-data/
-const char* ssid = "YIWEI_Laptop";
-const char* password = "1234567890";
+const char* ssid = "DESKTOP-F75OQEN 4768";
+const char* password = "|419W84g";
  
 AsyncWebServer server(80);
  
@@ -20,7 +20,7 @@ void setup() {
   Serial.println(WiFi.localIP());
  
   server.on(
-    "/post",
+    "/datastream",
     HTTP_POST,
     [](AsyncWebServerRequest * request){},
     NULL,
