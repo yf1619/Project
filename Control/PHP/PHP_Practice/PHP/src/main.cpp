@@ -53,21 +53,32 @@ void setup() {
 }
 
 void loop() {
-  
-
      // Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED ){ 
       outputsState = httpGETRequest(serverName);
       Serial.println(outputsState);
-      // JSONVar myObject = JSON.parse(outputsState);
-      // if (JSON.typeof(myObject) == "undefined") {
-      //   Serial.println("Parsing input failed!");
-      //   return;
-      // }
-    }
+      JSONVar myObject = JSON.parse(outputsState);
+      if (JSON.typeof(myObject) == "undefined") {
+        Serial.println("Parsing input failed!");
+        return;
+      }
+      Serial.print("JSON object = ");
+      Serial.println(myObject);
     
+      // myObject.keys() can be used to get an array of all the keys in the object
+      JSONVar keys = myObject.keys();
+    
+      for (int i = 0; i < keys.length(); i++) {
+        JSONVar value = myObject[keys[i]];
+        Serial.print("temp_id: ");
+        Serial.print(keys[i]);
+        Serial.print("temp_value: ");
+        Serial.println(value);
+      }
+    }    
     else {
       Serial.println("WiFi Disconnected");
     }
+    delay(120000);
 }
 
